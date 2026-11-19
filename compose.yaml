@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-revworxz}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:-local-admin-only}
+      SITE_DB_PASSWORD: ${SITE_DB_PASSWORD:-local-site-password}
+      API_DB_PASSWORD: ${API_DB_PASSWORD:-local-api-password}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+      - ./db/data.sql:/docker-entrypoint-initdb.d/002-data.sql:ro
+      - ./db/local-login.sh:/docker-entrypoint-initdb.d/003-local-login.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-revworxz}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
