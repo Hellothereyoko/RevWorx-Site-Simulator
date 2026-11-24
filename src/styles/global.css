@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "daisyui";
+@source "../pages";
+
+@theme {
+  --font-chonburi: "Chonburi", sans-serif;
+  --font-rocker: "Rocker", cursive;
+  --font-racing: "Racing Sans One", sans-serif;
+  --font-hubot: "Hubot Sans", sans-serif;
+}
+
+@utility bg-hero1 {
+  background-image: url("https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3JtdGVjdnRtcWgwcGQzNDZkN3ZvN2t0ZnNxaW91Z3FxazQ3NHRvcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ULXAGx1G1LhNJpMKkU/giphy.gif");
+}
+
+@utility bg-hero2 {
+  background-image: url("/images/bg.png");
+}
+
+@utility bg-hero3 {
+  background-image: url("https://img.freepik.com/free-vector/vintage-flash-tattoos-monochrome-seamless-pattern_225004-1534.jpg?semt=ais_hybrid&w=740&q=80");
+}
+
+@utility bg-hero4 {
+  background-image: url("https://www.tattoolife.com/wp-content/uploads/2021/10/TattooLifeTriptych1.jpg");
+}

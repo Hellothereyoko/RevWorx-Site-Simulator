@@ -1,5 +1,5 @@
 ---
-
+import "../styles/global.css";
 ---
 
 <html lang="en">
@@ -22,11 +22,14 @@
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
 				const toggleButton = document.querySelector('[data-collapse-toggle]');
-				const menu = document.getElementById(toggleButton.getAttribute('aria-controls'));
+				const menuId = toggleButton?.getAttribute('aria-controls');
+				const menu = menuId ? document.getElementById(menuId) : null;
 
-				toggleButton.addEventListener('click', () => {
-					menu.classList.toggle('hidden');
-				});
+				if (toggleButton instanceof HTMLButtonElement && menu) {
+					toggleButton.addEventListener('click', () => {
+						menu.classList.toggle('hidden');
+					});
+				}
 			});
 		</script>
 	</head>
@@ -210,9 +213,10 @@
 				  </button>
 
 					<script>
-					document.getElementById('page10').onclick = function() {
+					const page10Button = document.getElementById('page10');
+					page10Button?.addEventListener('click', () => {
 						location.href = '/contact';
-					};
+					});
 					</script>
 
 				  </div>
@@ -220,7 +224,7 @@
 							
 	
 </div>
-		<script>
+		<script lang="ts">
 			// Carousel and Lightbox functionality
 			const carousel = document.getElementById('galleryCarousel');
 			const carouselImages = document.querySelectorAll('#galleryCarousel img');
@@ -235,13 +239,43 @@
 			const imageCounter = document.getElementById('imageCounter');
 			const totalImages = document.getElementById('totalImages');
 
+			if (
+				!(carousel instanceof HTMLElement) ||
+				!(carouselPrevBtn instanceof HTMLButtonElement) ||
+				!(carouselNextBtn instanceof HTMLButtonElement) ||
+				!(lightboxModal instanceof HTMLElement) ||
+				!(lightboxImage instanceof HTMLImageElement) ||
+				!(closeModal instanceof HTMLButtonElement) ||
+				!(prevBtn instanceof HTMLButtonElement) ||
+				!(nextBtn instanceof HTMLButtonElement) ||
+				!(imageCounter instanceof HTMLSpanElement) ||
+				!(totalImages instanceof HTMLSpanElement)
+			) {
+				throw new Error('Gallery controls are missing from the page.');
+			}
+
+			const carouselElement = carousel;
+			const lightboxElement = lightboxModal;
+			const lightboxImageElement = lightboxImage;
+			const imageCounterElement = imageCounter;
+
 			let currentLightboxIndex = 0;
 			let carouselOffset = 0;
 			let imagesPerView = 5;
-			const images = Array.from(carouselImages).map(img => img.src);
+			const images = Array.from(carouselImages, (image) => {
+				if (!(image instanceof HTMLImageElement)) {
+					throw new Error('The gallery carousel contains a non-image element.');
+				}
+
+				return image.src;
+			});
+			if (images.length === 0) {
+				throw new Error('The gallery carousel has no images.');
+			}
+
 			let maxOffset = Math.max(0, images.length - imagesPerView);
 			
-			totalImages.textContent = images.length;
+			totalImages.textContent = String(images.length);
 
 			// Calculate images per view based on window size
 			function updateImagesPerView() {
@@ -280,22 +314,22 @@
 				const imageWidth = 100 / imagesPerView;
 				const gapPercentage = 0.6; // Adjust gap compensation based on view
 				const offset = carouselOffset * (imageWidth + gapPercentage);
-				carousel.style.transform = `translateX(-${offset}%)`;
+				carouselElement.style.transform = `translateX(-${offset}%)`;
 			}
 
 			// Open lightbox on image click
-			carouselImages.forEach((img) => {
-				img.addEventListener('click', (e) => {
-					currentLightboxIndex = parseInt(e.target.getAttribute('data-index'));
+			carouselImages.forEach((image, index) => {
+				image.addEventListener('click', () => {
+					currentLightboxIndex = index;
 					showImage(currentLightboxIndex);
-					lightboxModal.classList.remove('hidden');
+					lightboxElement.classList.remove('hidden');
 				});
 			});
 
 			// Close modal
 			closeModal.addEventListener('click', closeLightbox);
-			lightboxModal.addEventListener('click', (e) => {
-				if (e.target === lightboxModal) closeLightbox();
+			lightboxElement.addEventListener('click', (e) => {
+				if (e.target === lightboxElement) closeLightbox();
 			});
 
 			// Lightbox navigation
@@ -311,7 +345,7 @@
 
 			// Keyboard navigation
 			document.addEventListener('keydown', (e) => {
-				if (lightboxModal.classList.contains('hidden')) return;
+				if (lightboxElement.classList.contains('hidden')) return;
 				if (e.key === 'ArrowLeft') {
 					currentLightboxIndex = (currentLightboxIndex - 1 + images.length) % images.length;
 					showImage(currentLightboxIndex);
@@ -324,12 +358,17 @@
 			});
 
 			function showImage(index) {
-				lightboxImage.src = images[index];
-				imageCounter.textContent = index + 1;
+				const image = images[index];
+				if (!image) {
+					throw new RangeError(`Gallery image index ${index} is out of range.`);
+				}
+
+				lightboxImageElement.src = image;
+				imageCounterElement.textContent = String(index + 1);
 			}
 
 			function closeLightbox() {
-				lightboxModal.classList.add('hidden');
+				lightboxElement.classList.add('hidden');
 			}
 		</script>
 	</body>

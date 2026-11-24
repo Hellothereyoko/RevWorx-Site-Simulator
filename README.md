@@ -11,14 +11,14 @@ For me, design is not just about making things look good. I work across various 
 
 ## Run locally
 
-Requirements: Node.js and Docker Compose.
+Requirements: Node.js 22.23.4 or newer and Docker Compose.
 
 1. Copy `.env.example` to `.env`.
 2. Install dependencies with `npm ci`.
 3. Start PostgreSQL with `docker compose up -d db`. The supplied schema and sample data are loaded automatically the first time the database volume is created.
 4. Start the website with `npm run dev`.
 
-The local database is persisted in the `postgres_data` Docker volume. The site connects as `rwz_site`, which can only append contact submissions through a database function. The future Java API connects as `rwz_api`, whose reads are restricted by PostgreSQL row-level security. Do not use the example passwords outside local development.
+The local database is persisted in the `postgres_data` Docker volume. The site connects as `rwz_site`, which can only append contact submissions through a database function. Site database calls use the `sql` tagged template in `src/lib/db.ts`; interpolate values into that template rather than concatenating or interpolating them into ordinary SQL strings. The future Java API connects as `rwz_api`, whose reads are restricted by PostgreSQL row-level security. Do not use the example passwords outside local development.
 
 The Java API should call `get_login_user_by_email(email)` to retrieve the stored password hash, verify it in the API, and never return the hash to the browser. After authenticating, it must run customer queries in a transaction and set the trusted identity with a parameterized `SELECT set_config('app.user_id', ?, true)`. Owner and Admin roles can read all customer rows; Customer users can read only their own rows. Never derive this ID from an unauthenticated request parameter. The sample password hashes in `data.sql` are placeholders and must be replaced before enabling real logins.
 

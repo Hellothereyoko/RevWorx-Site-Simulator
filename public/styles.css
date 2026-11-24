@@ -7,9 +7,6 @@
 }
 @import url('https://fonts.googleapis.com/css2?family=Hubot+Sans:ital,wght@0,200..900;1,200..900&family=New+Rocker&family=Racing+Sans+One&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 /* === removing default button style ===*/
 .button {
   margin: 0;
@@ -139,7 +136,7 @@
         transform: translate(1px, -1px);
     }
 }
-// Contact Section Styles
+/* Contact Section Styles */
 #contactbody{
   display:flex;
 }

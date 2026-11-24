@@ -1,4 +1,6 @@
 ---
+import "../styles/global.css";
+
 const submissionStatus = Astro.url.searchParams.get("sent")
   ? "success"
   : Astro.url.searchParams.get("error");

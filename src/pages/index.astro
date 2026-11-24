@@ -1,5 +1,5 @@
 ---
-
+import "../styles/global.css";
 ---
 
 <html lang="en">
@@ -53,9 +53,10 @@
 		</div>
 
 		<script>
-			document.getElementById('page').onclick = function () {
+			const pageButton = document.getElementById('page');
+			pageButton?.addEventListener('click', () => {
 				location.href = '/about';
-			};
+			});
 		</script>
 	</body>
 </html>

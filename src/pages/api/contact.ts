@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { getPool } from "../../lib/db";
+import { query, sql } from "../../lib/db";
 
 export const prerender = false;
 
@@ -34,9 +34,8 @@ export const POST: APIRoute = async ({ request, redirect }) => {
   }
 
   try {
-    await getPool().query(
-      `SELECT public.submit_contact_form($1, $2, $3, $4)`,
-      [name, email, phone || null, message],
+    await query(
+      sql`SELECT public.submit_contact_form(${name}, ${email}, ${phone || null}, ${message})`,
     );
     return redirect("/contact?sent=1", 303);
   } catch (error) {

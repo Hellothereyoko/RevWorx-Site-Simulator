@@ -1,4 +1,8 @@
 
+---
+import "../styles/global.css";
+---
+
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -20,11 +24,14 @@
 		<script>
 			document.addEventListener('DOMContentLoaded', () => {
 				const toggleButton = document.querySelector('[data-collapse-toggle]');
-				const menu = document.getElementById(toggleButton.getAttribute('aria-controls'));
+				const menuId = toggleButton?.getAttribute('aria-controls');
+				const menu = menuId ? document.getElementById(menuId) : null;
 
-				toggleButton.addEventListener('click', () => {
-					menu.classList.toggle('hidden');
-				});
+				if (toggleButton instanceof HTMLButtonElement && menu) {
+					toggleButton.addEventListener('click', () => {
+						menu.classList.toggle('hidden');
+					});
+				}
 			});
 		</script>
 	</head>
@@ -165,6 +172,6 @@
   </div>
 </section>
 
-	
+		</div>
 	</body>
 </html>
